@@ -6,13 +6,41 @@
 	<constant name="struts.devMode" value="true" />
 	<constant name="struts.objectFactory" value="spring"></constant>
 
-	<package name="basicstruts2" extends="struts-default">
+	<package name="loginRequired" extends="json-default">
+		<interceptors>
+			<interceptor name="login" class="du.tech.baccarat.web.interceptor.LoginInterceptor"></interceptor>
+			<interceptor-stack name="loginStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="login"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="loginStack"></default-interceptor-ref>
+		
+		<global-results>
+			<result name="login">/login.jsp</result>
+		</global-results>
+		
 		<action name="index">
 			<result>/index.jsp</result>
 		</action>
-		<!-- 需要进行权限控制的页面访问 -->
+		
 		<action name="page_*_*">
 			<result>/WEB-INF/pages/{1}/{2}.jsp</result>
+		</action>
+		
+		<action name="user_*" class="du.tech.baccarat.web.action.user.UserAction" method="{1}">
+			<result name="editpasswordSUCCESS" type="json">
+				<param name="root">map</param>
+			</result>
+		</action>
+	</package>
+	
+	<package name="noLoginRequired" extends="struts-default">
+		<!-- 登陆功能 -->
+		<action name="login" class="du.tech.baccarat.web.action.user.LoginAction">
+			<result name="input">/login.jsp</result>
+			<result type="redirect">/index.jsp</result>
 		</action>
 	</package>
 

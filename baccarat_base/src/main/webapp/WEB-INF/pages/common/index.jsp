@@ -77,7 +77,7 @@
 		window.setTimeout(function(){
 			$.messager.show({
 				title:"消息提示",
-				msg:'欢迎登录，超级管理员！ <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
+				msg:'欢迎登录，${user.username} <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
 				timeout:5000
 			});
 		},3000);
@@ -88,7 +88,32 @@
 		});
 		
 		$("#btnEp").click(function(){
-			alert("修改密码");
+			
+			var newPass = $("#txtNewPass").val();
+			
+			var rePass  = $("#txtRePass").val();
+			
+			//validation part
+			if($.trim(newPass)==null){
+			$.messager.alert('警告','新密码不能为空或者空白字符！','warning');
+			return;
+			}
+			
+			if($.trim(newPass)!=$.trim(rePass)){
+				$.messager.alert('警告','两次输入的不一样！','warning');
+			}
+			
+			$.post("${pageContext.request.contextPath}/user_editPassword.action", {password: newPass}, function(data){
+				if(data.result == "success"){
+					$.messager.alert("信息", data.msg, "info");
+				}else{
+					$.messager.alert("信息", data.msg, "info");
+				}
+				// 窗口关闭 
+				$("#editPwdWindow").window('close');
+			});
+			
+			
 		});
 	});
 
@@ -142,7 +167,7 @@
 		$.messager
 		.confirm('系统提示','您确定要退出本次登录吗?',function(isConfirm) {
 			if (isConfirm) {
-				location.href = '${pageContext.request.contextPath }/login.jsp';
+				location.href = '${pageContext.request.contextPath }/invalid.jsp';
 			}
 		});
 	}
