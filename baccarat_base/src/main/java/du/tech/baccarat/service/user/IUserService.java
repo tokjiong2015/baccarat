@@ -1,9 +1,12 @@
 package du.tech.baccarat.service.user;
 
-import du.tech.baccarat.domain.user.User;
+import du.tech.baccarat.domain.uspf.Uspf;
 
 public interface IUserService {
-	public User login(User user);
+	public Uspf login(Uspf user);
 	
-	public void editPassword(User user);
+	public void editPassword(Uspf user);
+	
+	public int updateAndGetLatestGameSet(String controlCode);
+	
 }

@@ -8,34 +8,116 @@
 
 	<package name="loginRequired" extends="json-default">
 		<interceptors>
-			<interceptor name="login" class="du.tech.baccarat.web.interceptor.LoginInterceptor"></interceptor>
+			<interceptor name="login"
+				class="du.tech.baccarat.web.interceptor.LoginInterceptor"></interceptor>
 			<interceptor-stack name="loginStack">
 				<interceptor-ref name="defaultStack"></interceptor-ref>
 				<interceptor-ref name="login"></interceptor-ref>
+
 			</interceptor-stack>
 		</interceptors>
-		
+
 		<default-interceptor-ref name="loginStack"></default-interceptor-ref>
-		
+
 		<global-results>
 			<result name="login">/login.jsp</result>
 		</global-results>
-		
+
 		<action name="index">
 			<result>/index.jsp</result>
 		</action>
-		
+
 		<action name="page_*_*">
 			<result>/WEB-INF/pages/{1}/{2}.jsp</result>
 		</action>
-		
-		<action name="user_*" class="du.tech.baccarat.web.action.user.UserAction" method="{1}">
+
+		<action name="user_*" class="du.tech.baccarat.web.action.user.UserAction"
+			method="{1}">
 			<result name="editpasswordSUCCESS" type="json">
 				<param name="root">map</param>
 			</result>
 		</action>
+
+		<action name="strategy_*" class="du.tech.baccarat.web.action.bc.StrategyAction"
+			method="{1}">
+			<result name="STRSUCCESS">/index.jsp</result>
+			<result name="PAGINATIONSUCCESS" type="json">
+				<param name="root">pageResponseBean</param>
+			</result>
+			<result name="delBatchSUCCESS">/WEB-INF/pages/base/standard.jsp</result>
+			<!-- 收派标准 ajax列表 -->
+			<result name="listSelectionSUCCESS" type="json">
+				<param name="root">liStr</param>
+				<param name="includeProperties">
+					\[\d+\]\.strategyName,
+					\[\d+\]\.strategyDesc
+				</param>
+			</result>
+		</action>
+
+		<action name="player_*" class="du.tech.baccarat.web.action.bc.PlayerAction"
+			method="{1}">
+			<result name="saveOrUpdateSUCCESS">/WEB-INF/pages/base/player.jsp</result>
+			<result name="batchDeleteSUCCEESS">/WEB-INF/pages/base/player.jsp</result>
+			<result name="PAGINATIONSUCCESS" type="json">
+				<param name="root">pageResponseBean</param>
+				<param name="includeProperties">
+					rows\[\d+\]\.playerName,
+					rows\[\d+\]\.currFund,
+					rows\[\d+\]\.initialFund,
+					rows\[\d+\]\.strategyTendency,
+					rows\[\d+\]\.strategyTendencyDesc,
+					rows\[\d+\]\.totalGame,
+					rows\[\d+\]\.totalTie,
+					rows\[\d+\]\.totalWin,
+					rows\[\d+\]\.uspf.\userName
+				</param>
+			</result>
+		</action>
+
+		<action name="game_*" class="du.tech.baccarat.web.action.bc.GameAction"
+			method="{1}">
+			<result name="saveOrUpdateSUCCESS">/WEB-INF/pages/base/game.jsp</result>
+			<result name="fileUploadingSUCCESS">/WEB-INF/pages/base/game.jsp</result>
+			<result name="fileUploadingFAIL">/WEB-INF/pages/base/game.jsp</result>
+			<result name="PAGINATIONSUCCESS" type="json">
+				<param name="root">pageResponseBean</param>
+
+			</result>
+			<result name="TABTLISTSUCCESS" type="json">
+				<param name="root">listTables</param>
+			</result>
+			<result name="exportXlsSUCCESS" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="contentDisposition">attachment;filename=gameHist.xls</param>
+			</result>
+			 
+		</action>
+
+		<action name="tabt_*" class="du.tech.baccarat.web.action.bc.TabtAction"
+			method="{1}">
+			<result name="saveOrUpdateSUCCESS">/WEB-INF/pages/base/tabt.jsp</result>
+			<result name="PAGINATIONSUCCESS" type="json">
+				<param name="root">pageResponseBean</param>
+			</result>
+			<result name="listSelectionSUCCESS" type="json">
+				<param name="root">listTabt</param>
+			</result>
+		</action>
+		
+		<action name="lbby_*" class="du.tech.baccarat.web.action.bc.LbbyAction"
+			method="{1}">
+			<result name="saveOrUpdateSUCCESS">/WEB-INF/pages/base/tabt.jsp</result>
+			<result name="PAGINATIONSUCCESS" type="json">
+				<param name="root">pageResponseBean</param>
+			</result>
+			<result name="listSelectionSUCCESS" type="json">
+				<param name="root">listLbby</param>
+			</result>
+		</action>
+
 	</package>
-	
+
 	<package name="noLoginRequired" extends="struts-default">
 		<!-- 登陆功能 -->
 		<action name="login" class="du.tech.baccarat.web.action.user.LoginAction">

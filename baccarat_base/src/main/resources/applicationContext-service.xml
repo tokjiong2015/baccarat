@@ -13,4 +13,10 @@
 	http://www.springframework.org/schema/tx 
 	http://www.springframework.org/schema/tx/spring-tx.xsd">
  	<bean id="userService" class="du.tech.baccarat.service.impl.UserServiceImpl"></bean>
-</beans> 
+ 	<bean id="strategyService" class="du.tech.baccarat.service.impl.StrategyServiceImpl"></bean>
+ 	<bean id="playerService" class="du.tech.baccarat.service.impl.PlayerServiceImpl"></bean>
+ 	<bean id="gameService" class="du.tech.baccarat.service.impl.GameServiceImpl"></bean>
+ 	<bean id="tabtService" class="du.tech.baccarat.service.impl.TabtServiceImpl"></bean>
+ 	<bean id="lbbyService" class="du.tech.baccarat.service.impl.LbbyServiceImpl"></bean>
+ 	<bean id="IService" class="du.tech.baccarat.service.impl.IServiceImpl"></bean>
+</beans>  

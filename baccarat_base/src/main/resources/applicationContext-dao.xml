@@ -16,8 +16,53 @@
 	<!-- 为每个表 配置一个DAO -->
 	<bean id="userDAO" class="du.tech.baccarat.dao.impl.GenericDAOImpl">
 		<!-- 构造器注入 ，传入 实体类 完整类名  -->
-		<constructor-arg index="0" type="java.lang.String" value="du.tech.baccarat.domain.user.User"></constructor-arg>
+		<constructor-arg index="0" type="java.lang.String" value="du.tech.baccarat.domain.uspf.Uspf"></constructor-arg>
 		<!-- 注入SessionFactory -->
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
+	
+	<!-- 为每个表 配置一个DAO -->
+	<bean id="tabtDAO" class="du.tech.baccarat.dao.impl.GenericDAOImpl">
+		<!-- 构造器注入 ，传入 实体类 完整类名  -->
+		<constructor-arg index="0" type="java.lang.String" value="du.tech.baccarat.domain.tabt.Tabt"></constructor-arg>
+		<!-- 注入SessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="strategyDAO" class="du.tech.baccarat.dao.impl.GenericDAOImpl">
+		<!-- 构造器注入 ，传入 实体类 完整类名  -->
+		<constructor-arg index="0" type="java.lang.String" value="du.tech.baccarat.domain.strategy.Strategy"></constructor-arg>
+		<!-- 注入SessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="playerDAO" class="du.tech.baccarat.dao.impl.GenericDAOImpl">
+		<!-- 构造器注入 ，传入 实体类 完整类名  -->
+		<constructor-arg index="0" type="java.lang.String" value="du.tech.baccarat.domain.player.Player"></constructor-arg>
+		<!-- 注入SessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="lbbyDAO" class="du.tech.baccarat.dao.impl.GenericDAOImpl">
+		<!-- 构造器注入 ，传入 实体类 完整类名  -->
+		<constructor-arg index="0" type="java.lang.String" value="du.tech.baccarat.domain.lbby.Lbby"></constructor-arg>
+		<!-- 注入SessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="gameDAO" class="du.tech.baccarat.dao.impl.GenericDAOImpl">
+		<!-- 构造器注入 ，传入 实体类 完整类名  -->
+		<constructor-arg index="0" type="java.lang.String" value="du.tech.baccarat.domain.game.Game"></constructor-arg>
+		<!-- 注入SessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="genericDAO" class="du.tech.baccarat.dao.impl.GenericDAOImpl">
+		<!-- 构造器注入 ，传入 实体类 完整类名  -->
+		<constructor-arg index="0" type="java.lang.String" value=""></constructor-arg>
+		<!-- 注入SessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	
 </beans>

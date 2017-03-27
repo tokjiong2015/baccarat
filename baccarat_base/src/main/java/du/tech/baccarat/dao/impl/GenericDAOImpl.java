@@ -59,7 +59,22 @@ public class GenericDAOImpl<T> extends HibernateDaoSupport implements GenericDAO
 
 	@Override
 	public List<T> findByCriteria(DetachedCriteria detachedCriteria) {
-		return this.getHibernateTemplate().findByCriteria(detachedCriteria);
+		return this.getHibernateTemplate().findByCriteria(detachedCriteria,0,1);
+	}
+
+	@Override
+	public List<T> getCurrContentForPagination(DetachedCriteria detachedCriteria, int min, int max) {
+		return this.getHibernateTemplate().findByCriteria(detachedCriteria, min, max);
+	}
+
+	@Override
+	public void saveOrUpdate(String entityName,T obj) {
+		this.getHibernateTemplate().saveOrUpdate(entityName,obj);
+	}
+
+	@Override
+	public void saveOrUpdate(T obj) {
+		this.getHibernateTemplate().saveOrUpdate(obj);
 	}
 
 }

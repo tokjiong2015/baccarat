@@ -4,16 +4,15 @@ import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ModelDriven;
 
-import du.tech.baccarat.domain.user.User;
+import du.tech.baccarat.domain.uspf.Uspf;
 import du.tech.baccarat.web.action.base.BaseAction;
 
-public class LoginAction extends BaseAction implements ModelDriven<User> {
-
-	private User user = new User();
+public class LoginAction extends BaseAction implements ModelDriven<Uspf> {
+	private Uspf user = new Uspf();
 	private String validationCode;
 	
 	@Override
-	public User getModel() {
+	public Uspf getModel() {
 		return user;
 	}
 
@@ -25,8 +24,9 @@ public class LoginAction extends BaseAction implements ModelDriven<User> {
 			this.addActionError("Wrong Validation Code");
 			return INPUT;
 		}
-		
-		User loginUser = IUserService.login(user);
+		Uspf loginUser = IUserService.login(user);
+		IUserService.updateAndGetLatestGameSet("A");
+	
 		if(loginUser==null){
 			this.addActionError("Username or Password not correct");
 			return INPUT;

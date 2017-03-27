@@ -24,10 +24,17 @@
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/js/easyui/ext/jquery.cookie.js"></script>
 <script
-	src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js"
+	src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-en.js"
 	type="text/javascript"></script>
 <script type="text/javascript">
 	function doAdd(){
+		//manually clear
+		$('#sn1').val('');
+		$('#ifn2').numberbox('setValue',null);
+		$('#erpg3').numberbox('setValue',null);
+		$('#ccs4').val('');
+		$('#ltqpg5').numberbox('setValue',null);
+		$('#id').val('');
 		//alert("增加...");
 		$('#addStandardWindow').window("open");
 	}
@@ -37,67 +44,74 @@
 	}
 	
 	function doDelete(){
-		alert("删除...");
+		
+		var array = $('#grid').datagrid('getSelections');
+		
+		if(array.length==0)
+		{
+			$.messager.alert('warning','plz select','warning');
+			return;
+		}
+		
+		$('#delForm').submit();
 	}
 	//工具栏
-	var toolbar = [ {
+	var toolbar = [{
 		id : 'button-view',	
-		text : '查询',
+		text : 'Look Up',
 		iconCls : 'icon-search',
 		handler : doView
 	}, {
 		id : 'button-add',
-		text : '增加',
+		text : 'Add',
 		iconCls : 'icon-add',
 		handler : doAdd
 	}, {
 		id : 'button-delete',
-		text : '删除',
+		text : 'Delete',
 		iconCls : 'icon-cancel',
 		handler : doDelete
 	}];
 	// 定义列
-	var columns = [ [ {
-		field : 'id',
-		checkbox : true,
-	},{
-		field : 'name',
-		title : '标准名称',
+	var columns = [ [ 
+		{
+		field : 'strId',
+		checkbox : true ,
+	}, {
+		field : 'initFund',
+		title : 'Init Fund',
 		width : 120,
 		align : 'center'
 	}, {
-		field : 'minweight',
-		title : '最小重量',
+		field : 'expRevPerGame',
+		title : 'Expected Rev Per Game',
 		width : 120,
 		align : 'center'
 	}, {
-		field : 'maxweight',
-		title : '最大重量',
-		width : 120,
-		align : 'center'
-	}, {
-		field : 'operator.username',
-		title : '操作人',
+		field : 'lossToQuitPer',
+		title : 'Quit Amt Per Game',
 		width : 120,
 		align : 'center',
-		formatter : function(data,row, index){
-			return row.operator.username;
-		}
-		
 	}, {
+		field : 'CC',
+		title : 'C-Standard',
+		width : 100,
+		align : 'center'
+	},
+	{
+		field : 'expRev',
+		title : 'Total Expected Rev',
+		width : 100,
+		align : 'center'
+	},
+	{
 		field : 'updatetime',
 		title : '操作时间',
 		width : 160,
 		align : 'center'
-	}, {
-		field : 'operator.station',
-		title : '操作单位',
-		width : 200,
-		align : 'center',
-		formatter : function(data,row, index){
-			return row.operator.station;
-		}
-	} ] ];
+	}
+	
+	 ] ];
 	
 	$(function(){
 		// 先将body隐藏，再显示，不会出现页面刷新效果
@@ -113,7 +127,7 @@
 			pageList: [30,50,100],
 			pagination : true,
 			toolbar : toolbar,
-			url : "json/standard.json",
+			url : "${pageContext.request.contextPath}/strategy_processPagination.action",
 			idField : 'id',
 			columns : columns,
 			onDblClickRow : doDblClickRow
@@ -132,42 +146,85 @@
 		
 	});
 	
-	function doDblClickRow(){
-		alert("双击表格数据...");
+	function doDblClickRow(rowIndex,rowData){
+		//form callback
+		$('#sn1').val(rowData.strName);
+		$('#ifn2').numberbox('setValue',rowData.initFund);
+		$('#erpg3').numberbox('setValue',rowData.expRevPerGame);
+		$('#ccs4').val(rowData.CC);
+		$('#ltqpg5').numberbox('setValue',rowData.lossToQuitPer);
+		$('#id').val('edit');
+		//pop up the window
+		$('#addStandardWindow').window('open');
+	}
+	
+	function commitStandardForm(){
+		// 先判断form 是否通过校验，如果通过 ，提交表单  
+		var ltqpg = $("#ltqpg5").val();
+		var ifn   = $("#ifn2").val();
+		var erpg  = $("#erpg3").val();
+		
+		if(eval(ltqpg-ifn)>0){
+			$.messager.alert('Warn','Loss amt should be smaller than init amt','warning');
+		}
+		if(eval(erpg*2)>ifn){
+			$.messager.alert('Warn','You cannot win so much','warning');
+		}
+		
+		if($('#standardForm').form('validate')){// 执行EasyUI 校验方法
+			// 通过校验 
+			$('#standardForm').submit();
+		}else{
+			// 没通过校验
+			$.messager.alert('警告','表单存在非法数据，请重新输入','warning');
+		}
 	}
 	
 		
 </script>	
 </head>
 <body class="easyui-layout" style="visibility:hidden;">
-    <div region="center" border="false">
-    	<table id="grid"></table>
-	</div>
+    <form id="delForm" action="${pageContext.request.contextPath}/strategy_delBatch.action" method="post">
+    	<div region="center" border="false">
+    		<table id="grid"></table>
+		</div>
+	</form>
 	
-	<div class="easyui-window" title="添加收派标准" id="addStandardWindow" collapsible="false" minimizable="false" maximizable="false" style="top:100px;left:200px">
+	<div class="easyui-window" title="Add a Strategy" id="addStandardWindow" collapsible="false" minimizable="false" maximizable="false" style="top:100px;left:200px">
 		<div region="north" style="height:31px;overflow:hidden;" split="false" border="false" >
 			<div class="datagrid-toolbar">
-				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true" >保存</a>
+				<a id="save" icon="icon-save" href="javascript:commitStandardForm();" class="easyui-linkbutton" plain="true" >SAVE</a>
 			</div>
 		</div>
 		<div region="center" style="overflow:auto;padding:5px;" border="false">
-			<form>
+			<form id="standardForm" action="${pageContext.request.contextPath }/strategy_addStr.action" method="post">
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
-						<td colspan="2">收派标准信息</td>
+						<td colspan="2">Please Add a Strategy
+						<input type="hidden" name="id" id="id" />
+						</td>
 					</tr>
 					<tr>
-						<td>标准名称</td>
-						<td><input type="text" class="easyui-validatebox" required="true" /></td>
+						<td>Strategy Name</td>
+						<td><input id="sn1" name="strName" type="text" class="easyui-validatebox" data-options="required:true" /></td>
 					</tr>
 					<tr>
-						<td>最小重量</td>
-						<td><input type="text" class="easyui-numberbox"  /></td>
+						<td>Initial Fund</td>
+						<td><input id="ifn2" name="initFund" type="text" class="easyui-numberbox"  data-options="required:true"/></td>
 					</tr>
 					<tr>
-						<td>最大重量</td>
-						<td><input type="text" class="easyui-numberbox" /></td>
+						<td>Expected Revenue Per Game</td>
+						<td><input id="erpg3" name="expRevPerGame" type="text" class="easyui-numberbox" data-options="required:true"/></td>
 					</tr>
+					<tr>
+						<td>CC Strategy</td>
+						<td><input id="ccs4"  name="CC" type="text" class="easyui-validatebox" data-options="required:true" /></td>
+					</tr>
+					<tr>
+						<td>Loss To Quit Per Game</td>
+						<td><input id="ltqpg5" name="lossToQuitPer" type="text" class="easyui-numberbox" data-options="required:true"/></td>
+					</tr>
+					
 					</table>
 			</form>
 		</div>

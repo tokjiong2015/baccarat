@@ -8,23 +8,23 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 
-import du.tech.baccarat.domain.user.User;
+import du.tech.baccarat.domain.uspf.Uspf;
 import du.tech.baccarat.web.action.base.BaseAction;
 
-public class UserAction extends BaseAction implements ModelDriven<User> {
+public class UserAction extends BaseAction implements ModelDriven<Uspf> {
 
-	private User user = new User();
+	private Uspf user = new Uspf();
 
 	@Override
-	public User getModel() {
+	public Uspf getModel() {
 		return user;
 	}
 
 	public String editPassword() {
-		User loginUser = (User) ServletActionContext.getRequest().getSession().getAttribute("user");
-		user.setId(loginUser.getId());
-		user.setEmailAdd(loginUser.getEmailAdd());
-		user.setUsername(loginUser.getUsername());
+		Uspf loginUser = (Uspf) ServletActionContext.getRequest().getSession().getAttribute("user");
+		//user.setId(loginUser.getUserName());
+		//user.setEmailAdd(loginUser.getEmailAdd());
+		//user.setUsername(loginUser.getUsername());
 
 		try {
 			IUserService.editPassword(user);
